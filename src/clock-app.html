@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./clock-face.html">
+<link rel="import" href="./clock-ticker.html">
+<link rel="import" href="./clock-time.html">
+<link rel="import" href="./clock-date.html">
+
+<dom-module id="clock-app">
+	<template>
+		<style>
+			:host {
+				--font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+			}
+		</style>
+
+		<clock-face color="[[background]]">
+			<clock-ticker datetime="{{datetime}}"></clock-ticker>
+
+			<clock-time datetime="[[datetime]]"></clock-time>
+
+			<clock-date datetime="[[datetime]]"></clock-date>
+		</clock-face>
+	</template>
+
+	<script>
+		// helpers
+		const colors = ['red', 'green', 'blue'];
+		const getColor = date => colors[Math.floor(date.getSeconds() / ( 60 / colors.length))];
+
+		/** @polymerElement */
+		class ClockApp extends Polymer.Element {
+			static get is() { return 'clock-app'; }
+
+			static get properties() {
+				return {
+					datetime: {
+						type: Date,
+						value: () => new Date()
+					},
+					background: {
+						type: String,
+						computed: 'computeBackgroundColor(datetime)'
+					}
+				};
+			}
+
+			computeBackgroundColor(date) {
+				return getColor(date);
+			}
+		}
+
+		window.customElements.define(ClockApp.is, ClockApp);
+	</script>
+</dom-module>

@@ -1,0 +1,54 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="clock-ticker">
+	<script>
+		const every = (ms, cb) => {
+			const timeout = ms - (Date.now() % ms);
+
+			let off = clearTimeout;
+			let timer = setTimeout(() => {
+				cb();
+				timer = setInterval(cb, ms);
+				off = clearInterval;
+			}, timeout);
+
+			return () => off(timer);
+		};
+
+		/** @polymerElement */
+		class ClockTicker extends Polymer.Element {
+			static get is() { return 'clock-ticker'; }
+
+			static get properties() {
+				return {
+					datetime: {
+						type: Date,
+						readonly: true,
+						notify: true,
+						value: () => new Date()
+					},
+					interval: {
+						type: Number,
+						value: 1000
+					}
+				};
+			}
+
+			connectedCallback() {
+				super.connectedCallback();
+
+				this.timer = every(this.interval, () => {
+					this.datetime = new Date();
+				});
+			}
+
+			disconnectedCallback() {
+				super.disconnectedCallback();
+
+				this.timer();
+			}
+		}
+
+		window.customElements.define(ClockTicker.is, ClockTicker);
+	</script>
+</dom-module>

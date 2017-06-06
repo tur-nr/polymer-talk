@@ -1,0 +1,43 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<script src="../node_modules/dateformat/lib/dateformat.js"></script>
+
+<dom-module id="clock-time">
+	<template>
+		<style>
+			:host {
+				display: block;
+				font-family: var(--font);
+				font-size: 6rem;
+				color: white;
+				text-shadow: 1px 1px .25rem rgba(0, 0, 0, .5);
+			}
+		</style>
+
+		<span>[[time]]</span>
+	</template>
+
+	<script>
+	/** @polymerElement */
+	class ClockTime extends Polymer.Element {
+		static get is() { return 'clock-time'; }
+
+		static get properties() {
+			return {
+				datetime: {
+					type: Date
+				},
+				time: {
+					type: String,
+					computed: 'computeTime(datetime)'
+				}
+			};
+		}
+
+		computeTime(date) {
+			return dateFormat(date, 'HH:MM:ss');
+		}
+	}
+
+	window.customElements.define(ClockTime.is, ClockTime);
+	</script>
+</dom-module>
