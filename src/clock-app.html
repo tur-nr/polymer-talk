@@ -13,19 +13,29 @@
 		</style>
 
 		<clock-face color="[[background]]">
+
+			<!--
+				<clock-ticker/> mediator:
+					Allows properties to bind to another Element's property WITHOUT updating it's value.
+					<clock-ticker/> can set the .datetime property of <clock-app/>, but...
+					<clock-app/> can not set the .datetime property of <clock-ticker/>
+			-->
 			<clock-ticker datetime="{{datetime}}"></clock-ticker>
 
+			<!--
+				<clock-time/> push datetime down.
+			-->
 			<clock-time datetime="[[datetime]]"></clock-time>
 
+			<!--
+				<clock-date/> push datetime down.
+			-->
 			<clock-date datetime="[[datetime]]"></clock-date>
+
 		</clock-face>
 	</template>
 
 	<script>
-		// helpers
-		const colors = ['red', 'green', 'blue'];
-		const getColor = date => colors[Math.floor(date.getSeconds() / ( 60 / colors.length))];
-
 		/** @polymerElement */
 		class ClockApp extends Polymer.Element {
 			static get is() { return 'clock-app'; }
@@ -44,7 +54,11 @@
 			}
 
 			computeBackgroundColor(date) {
-				return getColor(date);
+				const colors = ['red', 'green', 'blue'];
+
+				return colors[
+					Math.floor(date.getSeconds() / ( 60 / colors.length))
+				];
 			}
 		}
 
