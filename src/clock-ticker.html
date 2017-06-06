@@ -42,7 +42,7 @@
 				super.connectedCallback();
 
 				this.timer = eachSecond(() => {
-					this.datetime = new Date();
+					this._setDatetime(new Date());
 				});
 			}
 
