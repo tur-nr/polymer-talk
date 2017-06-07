@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../mixins/ticker.html">
 <link rel="import" href="./clock-face.html">
-<link rel="import" href="./clock-ticker.html">
 <link rel="import" href="./clock-time.html">
 <link rel="import" href="./clock-date.html">
 
@@ -14,15 +13,6 @@
 		</style>
 
 		<clock-face color="[[background]]">
-
-			<!--
-				<clock-ticker/> mediator:
-					Allows properties to bind to another Element's property WITHOUT updating it's value.
-					<clock-ticker/> can set the .datetime property of <clock-app/>, but...
-					<clock-app/> can not set the .datetime property of <clock-ticker/>
-			-->
-			<clock-ticker datetime="{{datetime}}"></clock-ticker>
-
 			<!--
 				<clock-time/> push datetime down.
 			-->
