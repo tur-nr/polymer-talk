@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../mixins/redux.html">
+<link rel="import" href="../utils/on-second.html">
 <link rel="import" href="../mixins/ticker.html">
 <link rel="import" href="./clock-face.html">
 <link rel="import" href="./clock-time.html">
@@ -28,24 +30,64 @@
 
 	<script>
 		/** @polymerElement */
-		class ClockApp extends TickerMixin(Polymer.Element) {
+		class ClockApp extends ReduxMixin(Polymer.Element) {
 			static get is() { return 'clock-app'; }
 
-			static get properties() {
+			static get actions() {
 				return {
-					background: {
-						type: String,
-						computed: 'computeBackgroundColor(datetime)'
+					startTicker() {
+						return dispatch => {
+							dispatch({
+								type: 'START_TICKER',
+								timer: onSecond(() => {
+									dispatch('setDatetime', new Date());
+								})
+							});
+						};
+					},
+					stopTicker() {
+						return {
+							type: 'STOP_TICKER'
+						};
+					},
+					setDatetime(datetime) {
+						return {
+							type: 'SET_DATETIME',
+							datetime
+						};
 					}
 				};
 			}
 
-			computeBackgroundColor(date) {
-				const colors = ['red', 'green', 'blue'];
+			static get properties() {
+				return {
+					datetime: {
+						type: Date,
+						statePath: 'datetime'
+					},
+					background: {
+						type: String,
+						statePath(state) {
+							const colors = ['red', 'green', 'blue'];
 
-				return colors[
-					Math.floor(date.getSeconds() / ( 60 / colors.length))
-				];
+							return colors[
+								Math.floor(state.datetime.getSeconds() / ( 60 / colors.length))
+							];
+						}
+					}
+				};
+			}
+
+			connectedCallback() {
+				super.connectedCallback();
+
+				this.dispatch('startTicker');
+			}
+
+			disconnectedCallback() {
+				super.disconnectedCallback();
+
+				this.dispatch('stopTicker');
 			}
 		}
 

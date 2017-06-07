@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "dateformat": "^2.0.0",
-    "polymer-cli": "^1.1.0"
+    "polymer-cli": "^1.1.0",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0"
   }
 }

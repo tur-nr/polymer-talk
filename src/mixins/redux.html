@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+<script src="../../node_modules/redux/dist/redux.js"></script>
+<script src="../../node_modules/redux-thunk/dist/redux-thunk.js"></script>
+
+<script>
+	const initial = {
+		datetime: new Date()
+	};
+
+	const reducer = (state, action) => {
+		switch (action.type) {
+			case 'START_TICKER':
+				return Object.assign({}, state, {
+					timer: action.timer,
+				});
+
+			case 'STOP_TICKER':
+				state.timer(); // off
+
+				return Object.assign({}, state, {
+					timer: null,
+				});
+
+			case 'SET_DATETIME':
+				return Object.assign({}, state, {
+					datetime: action.datetime
+				});
+
+			default:
+				return state;
+		}
+	};
+
+	const enhancer = Redux.compose(
+		Redux.applyMiddleware(
+			ReduxThunk.default
+		),
+		devToolsExtension
+			? devToolsExtension()
+			: v => v
+	);
+
+	const store = Redux.createStore(reducer, initial, enhancer);
+
+	const ReduxMixin = PolymerRedux(store);
+</script>
