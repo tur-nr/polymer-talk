@@ -1,0 +1,37 @@
+<link rel="import" href="../utils/on-second.html">
+
+<script>
+	const TickerMixin = Parent => class extends Parent {
+		static get properties() {
+			return {
+				datetime: {
+					type: Date,
+					value: () => new Date(),
+
+					/**
+					 * This is trick for achieving a Mediator pattern.
+					 *
+					 * "readOnly" stops another Element updating.
+					 * "notify" push updates to another Element.
+					 */
+					readOnly: true,
+					notify: true
+				}
+			};
+		}
+
+		connectedCallback() {
+			super.connectedCallback();
+
+			this.timer = onSecond(() => {
+				this._setDatetime(new Date());
+			});
+		}
+
+		disconnectedCallback() {
+			super.disconnectedCallback();
+
+			this.timer();
+		}
+	};
+</script>
